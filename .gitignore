@@ -1,0 +1,6 @@
+.env
+*.exe
+*.tar
+*.txt
+jio_wan_ip
+public_ip
