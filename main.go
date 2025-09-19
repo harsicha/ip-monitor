@@ -135,7 +135,7 @@ func getJioWanIP() string {
 		}
 	}
 
-	return fmt.Sprintf("IPv4: %s", text)
+	return text
 }
 
 func readHttpResponse(response *http.Response) string {
@@ -205,12 +205,13 @@ func main() {
 		}
 
 		jioWanIP := getIPWithRetry(Jio_Wan_IP_RETRY_MAX, 60, getJioWanIP)
-		matches = checkIfFileContentMatches(JIO_WAN_IP_FILENAME, jioWanIP)
-		createFileIfNotExistsAndOverwrite(JIO_WAN_IP_FILENAME, jioWanIP)
+		jioWanIPFmt := fmt.Sprintf("IPv4: %s", jioWanIP)
+		matches = checkIfFileContentMatches(JIO_WAN_IP_FILENAME, jioWanIPFmt)
+		createFileIfNotExistsAndOverwrite(JIO_WAN_IP_FILENAME, jioWanIPFmt)
 
 		if !matches {
 			// log.Println("Jio WAN IP changed to:\n", jioWanIP)
-			err = sendTelegramMessage(fmt.Sprintf("📡 Jio WAN IP Address changed:\n%s", jioWanIP))
+			err = sendTelegramMessage(fmt.Sprintf("📡 Jio WAN IP Address changed:\n%s", jioWanIPFmt))
 			if err != nil {
 				log.Println("Failed to send Telegram message:", err)
 			}
